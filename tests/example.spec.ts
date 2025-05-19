@@ -1,7 +1,14 @@
 import { test, expect } from "@playwright/test";
+import { LoginPage } from "../pages/login.page.ts";
+import { StorePage } from "../pages/store.page.ts";
+
+let loginPage: LoginPage;
+let storePage: StorePage;
 
 test.describe("First steps on playwright", () => {
   test.beforeEach(async ({ page }) => {
+    loginPage = new LoginPage(page);
+    storePage = new StorePage(page);
     await page.goto("/");
   });
   test("Has a login form", async ({ page }) => {
@@ -10,38 +17,33 @@ test.describe("First steps on playwright", () => {
     });
 
     test.step("Has a login button", async () => {
-      await expect(page.getByRole("button", { name: "Login" })).toBeVisible();
+      await expect(loginPage.loginButton).toBeVisible();
     });
   });
 
   test("User can login", async ({ page }) => {
     // Rellenar el campo de usuario
     await test.step("Fill username input", async () => {
-      const usernameInput = page.locator('[data-test="username"]');
-      await usernameInput.waitFor({ state: "visible" });
-      await usernameInput.fill("standard_user");
-      await expect(usernameInput).toHaveValue("standard_user");
+      await loginPage.fillUsername("standard_user");
+      await expect(loginPage.usernameInput).toHaveValue("standard_user");
     });
 
     // Rellenar el campo de contraseña
     await test.step("Fill password input", async () => {
-      const passwordInput = page.locator('[data-test="password"]');
-      await passwordInput.waitFor({ state: "visible" });
-      await passwordInput.fill("secret_sauce");
-      await expect(passwordInput).not.toBe("");
+      await loginPage.fillPassword("secret_sauce");
+      await expect(loginPage.passwordInput).not.toBe("");
     });
 
     // Hacer clic en el botón de login
     await test.step("Click login button", async () => {
-      const loginButton = page.getByRole("button", { name: "Login" });
-      await loginButton.click();
+      await loginPage.clickLoginButton();
+      await expect(page).toHaveURL(/inventory/);
     });
 
     // Verificar que la página de eCommerce cargó correctamente
     await test.step("Verify eCommerce page is visible", async () => {
       await page.waitForLoadState("networkidle");
-      const eCommerceTitle = page.locator('[data-test="title"]');
-      await expect(eCommerceTitle).toBeVisible();
+      await expect(storePage.title).toBeVisible();
     });
   });
 });
