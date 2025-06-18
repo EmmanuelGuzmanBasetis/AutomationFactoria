@@ -1,12 +1,12 @@
-import { Locator, Page } from '@playwright/test';
+import { Locator, Page } from '@playwright/test'
 
 export class StorePage{
-    readonly page: Page;
-    readonly title: Locator;
+  readonly page: Page
+  readonly title: Locator
 
-    constructor(page: Page) {
-        this.page = page;
-        this.title = page.locator('[data-test="title"]');
-    }
-    
+  constructor(page: Page) {
+    this.page = page
+    this.title = page.locator('[data-test="title"]')
+  }
+
 }
