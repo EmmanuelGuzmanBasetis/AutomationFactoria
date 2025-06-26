@@ -86,14 +86,17 @@ test.use({
 
 ## 🗂 Page Object Model (POM) – Ejemplo
 ```ts
-export class LoginPage {
-  constructor(private page: Page) {}
+import { Locator, Page } from '@playwright/test'
 
-  async login(usuario: string, pass: string) {
-    await this.page.fill('#usuario', usuario);
-    await this.page.fill('#clave', pass);
-    await this.page.click('text=Ingresar');
+export class StorePage{
+  readonly page: Page
+  readonly title: Locator
+
+  constructor(page: Page) {
+    this.page = page
+    this.title = page.locator('[data-test="title"]')
   }
+
 }
 ```
 
